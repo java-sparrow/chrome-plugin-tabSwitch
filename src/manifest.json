@@ -1,0 +1,23 @@
+{
+	"name": "右键滚轮切换标签",
+	"version": "0.1",
+	"manifest_version": 2,
+	"description": "右键+滚轮，可以切换标签（在同一窗口内）。注意：该功能只对已激活的标签生效（只要对每个标签的页面都点击一次就能完成激活，后续版本将优化这一体验，敬请期待！）",
+	"background": {
+		"scripts": ["background.js"]
+	},
+	"content_scripts": [
+		{
+			"matches": ["http://*/*"],
+			"js": [
+				"lib/jquery-2.2.0.min.js",
+				"insertEvent.js"
+			]
+		}
+	],
+	"permissions": [
+		"tabs",
+		"http://*/*",
+		"https://*/*"
+	]
+}
