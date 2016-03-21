@@ -3,6 +3,16 @@
 // 鼠标右键按住的标志（根据此标志判断 滚动滚轮时是否切换标签）
 var isRightClick = false;
 var port = chrome.extension.connect();
+var postMessage = function (message) {
+	port.postMessage(message);
+};
+var logToBackground = function () {
+	port.postMessage({
+		type: "log",
+		logList: Array.from(arguments)
+	});
+};
+
 
 // 鼠标按下事件
 $(document).mousedown(function (e) {
@@ -28,6 +38,7 @@ $(window).bind("mousewheel", function (e) {
 	// console.log("mousewheel on window");
 	// console.log("isRightClick:", isRightClick);
 	// console.log("e.wheelDelta :", e.originalEvent.wheelDelta);
+	logToBackground("isRightClick:", isRightClick);
 	
 	// 当 鼠标右键按住的标志 为true时，向 后台js发送消息
 	if (isRightClick) {
@@ -38,7 +49,7 @@ $(window).bind("mousewheel", function (e) {
 		if (isSwitchToLeft) {
 			// console.log("switchToLeft!");
 			
-			port.postMessage({
+			postMessage({
 				info: "switchToLeft",
 				isSwitchToLeft: true
 			});
@@ -46,7 +57,7 @@ $(window).bind("mousewheel", function (e) {
 		if (isSwitchToRight) {
 			// console.log("switchToRight!");
 			
-			port.postMessage({
+			postMessage({
 				info: "switchToRight",
 				isSwitchToRight: true
 			});

@@ -3,6 +3,19 @@
 // 监听通信事件
 chrome.extension.onConnect.addListener(function(port) {
 	port.onMessage.addListener(function(msg) {
+		if (msg.type == "log") {
+			console.info("receive a log request from port...");
+			
+			var logList = msg.logList;
+			logList.unshift("port log: ");
+			
+			console.log.apply(console, logList);
+			
+			return;
+		}
+		
+		
+		
 		// console.log(msg.info);
 		
 		chrome.tabs.getAllInWindow(function (tabArray) {
