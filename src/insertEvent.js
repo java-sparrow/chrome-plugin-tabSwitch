@@ -38,7 +38,8 @@ $(window).bind("mousewheel", function (e) {
 	// console.log("mousewheel on window");
 	// console.log("isRightClick:", isRightClick);
 	// console.log("e.wheelDelta :", e.originalEvent.wheelDelta);
-	logToBackground("isRightClick:", isRightClick);
+	
+	// logToBackground("isRightClick:", isRightClick);
 	
 	// 当 鼠标右键按住的标志 为true时，向 后台js发送消息
 	if (isRightClick) {
@@ -69,5 +70,16 @@ $(window).bind("mousewheel", function (e) {
 });
 
 
+// 监听通信事件
+chrome.extension.onConnect.addListener(function (port) {
+	port.onMessage.addListener(function(msg) {
+		if (msg == "lease") {
+			isRightClick = false;
+		}
+		else if (msg == "enter") {
+			isRightClick = true;
+		}
+	});
+});
 
 

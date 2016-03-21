@@ -1,5 +1,22 @@
 // console.log("background.js load...");
 
+var portStore = {};
+
+var createConnect = function (tabId) {
+	var port = portStore[tabId];
+	
+	if (port) {
+		return port;
+	}
+	
+	port = chrome.tabs.connect(tabId);
+	portStore[tabId] = port;
+	
+	return port;
+};
+
+
+
 // 监听通信事件
 chrome.extension.onConnect.addListener(function(port) {
 	port.onMessage.addListener(function(msg) {
@@ -55,6 +72,12 @@ chrome.extension.onConnect.addListener(function(port) {
 			chrome.tabs.update(targetTab.id, {
 				selected: true
 			}, function callback() {
+				var currentTabPort = createConnect(currentTab.id);
+				currentTabPort.postMessage("leave");
+				
+				var targetTabPort = createConnect(targetTab.id);
+				targetTabPort.postMessage("enter");
+				
 				// console.log("switch to tab:", targetTab.index);
 			});
 		});
